@@ -1,0 +1,48 @@
+.header{
+    display: block;
+    background-color: black;
+    border: 5px red;
+    text-align: center;
+}
+.top{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    text-align: right;
+    background-color: black;
+    height: 20px;
+}
+.topfont{
+    color: aliceblue;
+}
+.topfont:hover{
+    color: rgb(88, 159, 221);
+}
+.title{
+    text-align: center;
+    font-size: 50px;
+    color: aliceblue;
+}
+img{
+    border: 5px solid rgb(69, 150, 221);
+}
+body{
+    background-color: rgb(110, 104, 104);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+ol{
+    color: aliceblue;
+}
+h3{
+    color: aliceblue;
+}
+.bottom{
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    text-align: center;
+    background-color: rgb(69, 150, 221);
+    height: 20px;
+}

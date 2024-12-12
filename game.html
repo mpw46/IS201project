@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake Game</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: url('https://s1.1zoom.me/b5250/928/Switzerland_Mountains_Scenery_Alps_Clouds_517724_1920x1080.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      font-family: 'Comic Sans MS', sans-serif;
+      font-size: 50px;
+      margin: 10;
+      color: white;
+    }
+
+    canvas {
+      background-color: #fff;
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>How many lindors can you eat?</h1>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const box = 20;
+    const rows = canvas.height / box;
+    const cols = canvas.width / box;
+
+    let snake;
+    let direction;
+    let food;
+    let score;
+    let colors;
+
+    const foodImage = new Image();
+    foodImage.src = 'assets/img/lindor.jpg'; // Replace with the URL of your chocolate bar image
+
+    function resetGame() {
+      snake = [
+        { x: 9 * box, y: 9 * box }
+      ];
+      direction = null;
+      food = {
+        x: Math.floor(Math.random() * cols) * box,
+        y: Math.floor(Math.random() * rows) * box
+      };
+      score = 0;
+      colors = [getRandomColor()];
+    }
+
+    function getRandomColor() {
+      return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    }
+
+    function drawSnake() {
+      for (let i = 0; i < snake.length; i++) {
+        ctx.fillStyle = colors[i % colors.length] || 'lime';
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      }
+    }
+
+    function drawFood() {
+      ctx.drawImage(foodImage, food.x, food.y, box, box);
+    }
+
+    function update() {
+      const head = { ...snake[0] };
+
+      if (direction === 'LEFT') head.x -= box;
+      if (direction === 'UP') head.y -= box;
+      if (direction === 'RIGHT') head.x += box;
+      if (direction === 'DOWN') head.y += box;
+
+      // Check collision with food
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        food = {
+          x: Math.floor(Math.random() * cols) * box,
+          y: Math.floor(Math.random() * rows) * box
+        };
+        colors.push(getRandomColor());
+      } else {
+        snake.pop(); // Remove the last part of the snake
+      }
+
+      // Check collision with walls or itself
+      if (
+        head.x < 0 || head.y < 0 ||
+        head.x >= canvas.width || head.y >= canvas.height ||
+        snake.some(part => part.x === head.x && part.y === head.y)
+      ) {
+        if (confirm(`Game Over! Your score: ${score}. If you would like to play again, please refresh this page.`)) {
+          resetGame();
+        } else {
+          clearInterval(gameInterval);
+        }
+      }
+
+      snake.unshift(head);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawSnake();
+      drawFood();
+
+      ctx.fillStyle = 'black';
+      ctx.fillText(`Score: ${score}`, 10, canvas.height - 10);
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+      if (event.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+      if (event.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+      if (event.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+    });
+
+    resetGame();
+    const gameInterval = setInterval(gameLoop, 100);
+  </script>
+</body>
+</html>
